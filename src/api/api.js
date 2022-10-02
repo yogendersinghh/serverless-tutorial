@@ -71,3 +71,20 @@ module.exports.getOne = async(event)=>{
     console.log("🚀 ~ file: api.js ~ line 63 ~ module.exports.getOne=async ~ response", response)
     return response
 }
+
+
+module.exports.deleteOne = async(event)=>{
+    const {id} = event.pathParameters;
+    let query = "delete from student where id=?";
+    let sql = await mysql.query(query,[id])
+    console.log("🚀 ~ file: api.js ~ line 80 ~ module.exports.deleteOne ~ sql", sql)
+    let response = {
+        statusCode:200,
+        body:JSON.stringify({
+            message:"user is deleted",
+            input:sql
+        },null,2)
+    }
+    return response
+    
+}
