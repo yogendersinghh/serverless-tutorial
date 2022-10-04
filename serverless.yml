@@ -23,7 +23,9 @@ frameworkVersion: '3'
 provider:
   name: aws
   runtime: nodejs12.x
-
+  region: ap-south-1
+  stage: dev
+  role: arn:aws:iam::450553335545:role/serverlessTut
 # you can overwrite defaults here
 #  stage: dev
 #  region: us-east-1
@@ -48,7 +50,7 @@ provider:
 
 # you can define service wide environment variables here
   environment:
-    DB: yogi
+    DB: mydb
     HOST: localhost
     USER: root
     PSWD: yogi@123
@@ -81,8 +83,15 @@ functions:
           path: testing/{id}
           method: get
           cors: true
+  OrgFunction:
+    handler: ./src/api/api.createOrg
+    events:
+      - http:
+          path: org-create
+          method: post
+          cors: true
   secondFunction:
-    handler: ./src/api/api.postApi
+    handler: ./src/api/api.createApi
     events:
       - http:
           path: /post/api
@@ -92,7 +101,7 @@ functions:
     handler: ./src/api/api.updateApi
     events:
       - http:
-          path: /update-user/{id}
+          path: /update-user/{idContacts}
           method: post
           cors: true
   fourthFunction:
@@ -106,7 +115,7 @@ functions:
     handler: ./src/api/api.deleteOne
     events:
       - http:
-          path: /deleteUser/{id}
+          path: /deleteUser/{idContacts}
           method: delete
           cors: true
 #    The following are a few example events you can configure
