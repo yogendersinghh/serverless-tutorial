@@ -25,7 +25,8 @@ provider:
   runtime: nodejs12.x
   region: ap-south-1
   stage: dev
-  role: arn:aws:iam::450553335545:role/serverlessTut
+  iam:
+    role: arn:aws:iam::450553335545:role/serverlessTut
 # you can overwrite defaults here
 #  stage: dev
 #  region: us-east-1
@@ -55,6 +56,7 @@ provider:
     USER: root
     PSWD: yogi@123
 
+  
 # you can add packaging information here
 #package:
 #  patterns:
@@ -64,6 +66,10 @@ provider:
 #    - include-me-dir/**
 # environment:
 #   HOST: localhost
+
+custom: 
+  serverless-offline:
+    httpPort: 4000
 
 plugins:
   - serverless-offline
@@ -77,45 +83,60 @@ functions:
           method: get
           cors: true
   myFunction:
-    handler: ./src/api/api.testing
+    handler: ./src/api/api.getAll
     events:
       - http:
-          path: testing/{id}
+          path: api/getAll
+          method: get
+          cors: true
+  AllOrgFunction:
+    handler: ./src/api/api.getAllOrg
+    events:
+      - http:
+          path: api/getAllOrg
           method: get
           cors: true
   OrgFunction:
     handler: ./src/api/api.createOrg
     events:
       - http:
-          path: org-create
+          path: api/org-create
           method: post
           cors: true
   secondFunction:
-    handler: ./src/api/api.createApi
+    handler: ./src/api/api.createContact
     events:
       - http:
-          path: /post/api
+          path: api/contact-create
           method: post
           cors: true
   thirdFunction:
     handler: ./src/api/api.updateApi
     events:
       - http:
-          path: /update-user/{idContacts}
+          path: api/update-user/{idContacts}
           method: post
           cors: true
   fourthFunction:
     handler: ./src/api/api.getOne
     events:
       - http:
-          path: /getone/{id}
+          path: api/getone/{id}
           method: get
           cors: true
   fifthFunction:
-    handler: ./src/api/api.deleteOne
+    handler: ./src/api/api.deleteUser
     events:
       - http:
-          path: /deleteUser/{idContacts}
+          path: api/deleteUser/{idContacts}
+          method: delete
+          cors: true
+
+  sixthFunction:
+    handler: ./src/api/api.deleteOrg
+    events:
+      - http:
+          path: api/deleteOrg/{idOrganization}
           method: delete
           cors: true
 #    The following are a few example events you can configure
