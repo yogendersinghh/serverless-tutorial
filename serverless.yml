@@ -111,10 +111,17 @@ functions:
           method: post
           cors: true
   thirdFunction:
-    handler: ./src/api/api.updateApi
+    handler: ./src/api/api.updateUser
     events:
       - http:
           path: api/update-user/{idContacts}
+          method: post
+          cors: true
+  OrgUpdateFunction:
+    handler: ./src/api/api.updateOrg
+    events:
+      - http:
+          path: api/update-org/{idOrganization}
           method: post
           cors: true
   fourthFunction:
@@ -122,6 +129,13 @@ functions:
     events:
       - http:
           path: api/getone/{id}
+          method: get
+          cors: true
+  getOneOrgFunction:
+    handler: ./src/api/api.getOneOrg
+    events:
+      - http:
+          path: api/getone-org/{id}
           method: get
           cors: true
   fifthFunction:

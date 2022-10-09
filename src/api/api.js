@@ -124,7 +124,7 @@ module.exports.createOrg = async (event) => {
   return response;
 };
 
-module.exports.updateApi = async (event) => {
+module.exports.updateUser = async (event) => {
   const paramsID = event.pathParameters;
   const data = JSON.parse(event.body);
   let updateQuery = "update Contacts SET ? where ?";
@@ -140,9 +140,38 @@ module.exports.updateApi = async (event) => {
   return response;
 };
 
+module.exports.updateOrg = async (event) => {
+  const paramsID = event.pathParameters;
+  const data = JSON.parse(event.body);
+  let updateQuery = "update Organization SET ? where ?";
+  const result = await mysql.query(updateQuery, [data, paramsID]);
+  let response = {
+    statusCode: 200,
+    body: JSON.stringify({
+      message: "org is updated",
+      input: result,
+    }),
+  };
+  mysql.end();
+  return response;
+};
+
+
 module.exports.getOne = async (event) => {
   let { id } = event.pathParameters;
   let getOneQuery = "select * from Contacts where idContacts= ?";
+  let sql = await mysql.query(getOneQuery, [id]);
+  let response = {
+    statusCode: 200,
+    body: JSON.stringify(sql, null, 2),
+  };
+
+  return response;
+};
+
+module.exports.getOneOrg = async (event) => {
+  let { id } = event.pathParameters;
+  let getOneQuery = "select * from Organization where idOrganization= ?";
   let sql = await mysql.query(getOneQuery, [id]);
   let response = {
     statusCode: 200,
