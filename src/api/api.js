@@ -92,7 +92,7 @@ module.exports.createOrg = async (event) => {
     statusCode: 0,
     body: "",
   };
-  if (!OrganizationName && !Email) {
+  if (!OrganizationName || !Email) {
     response.statusCode = 400;
     response.body = JSON.stringify(
       { message: "please fill ateast Email And OrganizationName" },
@@ -103,7 +103,6 @@ module.exports.createOrg = async (event) => {
   }
   let EmailQuery = "select * from Organization where Email = ?";
   let result = await mysql.query(EmailQuery, [Email]);
-    console.log("🚀 ~ file: api.js ~ line 94 ~ module.exports.createOrg= ~ result", result)
     if (result.length) {
     (response.statusCode = 403),
       (response.body = JSON.stringify(
@@ -178,26 +177,23 @@ module.exports.deleteOrg = async (event) => {
     statusCode:0,
     body:""
   }
-  mysql.query(query, paramsID,(err,res)=>{
-    if(err){
-      console.log("🚀 ~ file: api.js ~ line 183 ~ mysql.query ~ err", err.sqlMessage)
-      response.statusCode = 400,
+  try{
+     const res = await mysql.query(query,paramsID);
+     response.statusCode = 200,
+     response.body=JSON.stringify(
+       {
+         message: "Organization is deleted",
+         input: res,
+       },
+       null,
+       2
+     )
+     mysql.end()
+     return response
+  }
+  catch(err){
+    response.statusCode = 400,
       response.body = JSON.stringify(err,null,2);
       return response
-    }
-    console.log("🚀 ~ file: api.js ~ line 195 ~ mysql.query ~ res", res)
-    
-      response.statusCode =200,
-      response.body=JSON.stringify(
-        {
-          message: "Organization is deleted",
-          input: res,
-        },
-        null,
-        2
-      )
-    return response;
-  });
-  // console.log("🚀 ~ file: api.js ~ line 178 ~ module.exports.deleteOrg ~ sql", sql)
-  
+  }
 };
